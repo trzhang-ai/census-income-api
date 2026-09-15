@@ -26,7 +26,7 @@ government benefits, or other high-impact opportunities.
 
 ## Training Data
 
-The model uses the cleaned `starter/data/census.csv` file from this project. The
+The model uses the cleaned `census_income/data/census.csv` file from this project. The
 local file contains 32,561 rows, 14 input features, and the binary `salary`
 label. The label values are `<=50K` and `>50K`; `>50K` is treated as the positive
 class when calculating the reported metrics.

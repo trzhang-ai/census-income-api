@@ -1,6 +1,6 @@
 # Census Income Prediction API
 
-[![Continuous Integration](https://github.com/trzhang-ai/Deploying-a-ML-Model-to-Cloud-Application-Platform-with-FastAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/trzhang-ai/Deploying-a-ML-Model-to-Cloud-Application-Platform-with-FastAPI/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/trzhang-ai/census-income-api/actions/workflows/ci.yml/badge.svg)](https://github.com/trzhang-ai/census-income-api/actions/workflows/ci.yml)
 
 A lockfile-backed machine-learning inference service for classifying Census Income
 records. The project combines a scikit-learn Random Forest model, typed FastAPI
@@ -11,8 +11,8 @@ Render.
 | --- | --- |
 | Hosted API | [Render service — currently suspended](https://deploying-a-ml-model-to-cloud-fjou.onrender.com/) |
 | Interactive OpenAPI docs | [Swagger UI — available after resuming](https://deploying-a-ml-model-to-cloud-fjou.onrender.com/docs) |
-| Model documentation | [Model card](starter/model_card_template.md) |
-| CI workflow | [GitHub Actions](https://github.com/trzhang-ai/Deploying-a-ML-Model-to-Cloud-Application-Platform-with-FastAPI/actions/workflows/ci.yml) |
+| Model documentation | [Model card](census_income/model_card.md) |
+| CI workflow | [GitHub Actions](https://github.com/trzhang-ai/census-income-api/actions/workflows/ci.yml) |
 
 > **Deployment status:** The Render web service is intentionally suspended
 > after its live GET and POST endpoints and CI-gated deployment were verified.
@@ -21,6 +21,11 @@ Render.
 > or Swagger UI; the application remains fully runnable locally.
 
 ## What this project demonstrates
+
+The application entry point is now `census_income.api:app`. The former
+`starter.main:app` import remains as a compatibility adapter for the suspended
+Render configuration. When resuming the service, its start command can be set
+to `uvicorn census_income.api:app --host 0.0.0.0 --port $PORT`.
 
 - Reproducible dependency management with Python 3.13, `uv`, and `uv.lock`.
 - Five-fold stratified cross-validation with fold-local categorical encoding.
@@ -59,7 +64,7 @@ five stratified cross-validation folds.
 | Recall | 0.627 | 0.010 |
 | F1 score | 0.677 | 0.008 |
 
-See the [model card](starter/model_card_template.md) for data assumptions,
+See the [model card](census_income/model_card.md) for data assumptions,
 slice-analysis methodology, ethical considerations, and evaluation limits.
 
 ## API
@@ -89,7 +94,7 @@ Install the locked environment and start the API:
 
 ```bash
 uv sync --locked
-uv run --locked uvicorn starter.main:app --reload
+uv run --locked uvicorn census_income.api:app --reload
 ```
 
 Open <http://127.0.0.1:8000/docs> for the interactive API schema.
@@ -98,29 +103,30 @@ Run the verification suite:
 
 ```bash
 uv run --locked pytest
-uv run --locked flake8 starter/main.py starter/starter/ml/data.py \
-  starter/starter/ml/model.py starter/starter/train_model.py tests \
+uv run --locked flake8 census_income/api.py census_income/ml/data.py \
+  census_income/ml/model.py census_income/train_model.py tests \
   --max-line-length=79
 ```
 
 Retrain the model and regenerate the serialized artifacts and slice report:
 
 ```bash
-uv run --locked python -m starter.starter.train_model
+uv run --locked python -m census_income.train_model
 ```
 
 ## Repository layout
 
 ```text
-starter/main.py                  FastAPI application and request schemas
-starter/starter/ml/data.py       preprocessing and feature encoding
-starter/starter/ml/model.py      training, inference, metrics, slice reports
-starter/starter/train_model.py   cross-validation and artifact generation
-starter/model/                   serialized model and preprocessing artifacts
-starter/data/census.csv          cleaned modeling dataset
-tests/                           API and model tests
-.github/workflows/ci.yml         test and lint gate
-slice_output.txt                 categorical slice metrics
+census_income/api.py           FastAPI application and request schemas
+census_income/ml/              preprocessing, modeling, and evaluation
+census_income/train_model.py   cross-validation and artifact generation
+census_income/model/           serialized model and preprocessing artifacts
+census_income/data/census.csv  cleaned modeling dataset
+census_income/model_card.md    intended use and evaluation limits
+docs/evidence/                 historical deployment screenshots
+tests/                        API and model tests
+.github/workflows/ci.yml        test and lint gate
+slice_output.txt               categorical slice metrics
 ```
 
 ## Responsible-use boundary

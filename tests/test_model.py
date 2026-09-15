@@ -3,9 +3,9 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils.validation import check_is_fitted
-from starter.starter.ml.model import train_model
-from starter.starter.ml.model import compute_model_metrics
-from starter.starter.ml.model import inference
+from census_income.ml.model import train_model
+from census_income.ml.model import compute_model_metrics
+from census_income.ml.model import inference
 from sklearn.metrics import precision_recall_fscore_support
 
 

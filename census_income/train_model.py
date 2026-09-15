@@ -1,9 +1,11 @@
 # Train, evaluate, and serialize the Census Income classifier.
+from pathlib import Path
+
 import joblib
 import pandas as pd
 from statistics import stdev, mean
-from starter.starter.ml.data import process_data
-from starter.starter.ml.model import (
+from census_income.ml.data import process_data
+from census_income.ml.model import (
     train_model,
     inference,
     compute_model_metrics,
@@ -19,8 +21,12 @@ def print_metric(metric_name, metric_values):
     )
 
 
+PACKAGE_DIR = Path(__file__).resolve().parent
+
 # Load the cleaned Census Income dataset.
-data = pd.read_csv("starter/data/census.csv", delimiter=",", engine="python")
+data = pd.read_csv(
+    PACKAGE_DIR / "data" / "census.csv", delimiter=",", engine="python"
+)
 cat_features = [
     "workclass",
     "education",
@@ -79,6 +85,6 @@ X, y, encoder, lb = process_data(
 )
 model = train_model(X, y)
 final_report = prepare_final_report(reports)
-joblib.dump(model, "starter/model/model.pkl")
-joblib.dump(encoder, "starter/model/encoder.pkl")
-joblib.dump(lb, "starter/model/lb.pkl")
+joblib.dump(model, PACKAGE_DIR / "model" / "model.pkl")
+joblib.dump(encoder, PACKAGE_DIR / "model" / "encoder.pkl")
+joblib.dump(lb, PACKAGE_DIR / "model" / "lb.pkl")

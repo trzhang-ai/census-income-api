@@ -1,5 +1,5 @@
 import pytest
-from starter.main import app
+from census_income.api import app
 from fastapi.testclient import TestClient
 
 
@@ -15,6 +15,18 @@ def test_read_main(client):
     assert response.json() == {
         "message": "Welcome to the Census Income Prediction API"
     }
+
+
+def test_model_loading_independent_of_working_directory(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with TestClient(app) as client:
+        assert client.get("/").status_code == 200
+
+
+def test_legacy_deployment_entry_point():
+    from starter.main import app as legacy_app
+
+    assert legacy_app is app
 
 
 def test_predict_less_50K(client):
