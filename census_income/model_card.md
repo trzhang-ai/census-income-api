@@ -8,7 +8,7 @@ hyperparameters and was trained with Python 3.13.3. The final model is trained
 on the complete local training dataset and is saved with its categorical encoder
 and label binarizer.
 
-This is a portfolio demonstration rather than a production-ready or
+This is a demonstration model rather than a production-ready or
 independently validated income-prediction system. The reporting structure is
 informed by [Model Cards for Model Reporting](https://arxiv.org/abs/1810.03993).
 

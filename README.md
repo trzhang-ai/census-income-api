@@ -2,10 +2,16 @@
 
 [![Continuous Integration](https://github.com/trzhang-ai/census-income-api/actions/workflows/ci.yml/badge.svg)](https://github.com/trzhang-ai/census-income-api/actions/workflows/ci.yml)
 
-A lockfile-backed machine-learning inference service for classifying Census Income
-records. The project combines a scikit-learn Random Forest model, typed FastAPI
-endpoints, slice-level evaluation, automated tests, and CI-gated deployment on
-Render.
+A machine-learning prediction service, deployed behind automated quality gates,
+that classifies whether a person's annual income exceeds $50K from census
+attributes.
+
+| | |
+| --- | --- |
+| **Problem** | A trained model only becomes useful once it is served reliably, tested automatically, and documented for responsible use. |
+| **Approach** | A Random Forest classifier with five-fold cross-validation, served through typed single-record and batch FastAPI endpoints; GitHub Actions runs tests and linting before every automatic deployment to Render. |
+| **Results** | F1 0.677 (precision 0.735, recall 0.627) across five folds, with per-group (slice) metrics; live GET and POST endpoints were verified on Render before the service was suspended to save cost. |
+| **Stack** | Python · scikit-learn · pandas · FastAPI · Pydantic · pytest · flake8 · GitHub Actions · Render · uv |
 
 | Resource | Link |
 | --- | --- |
@@ -22,10 +28,9 @@ Render.
 
 ## What this project demonstrates
 
-The application entry point is now `census_income.api:app`. The former
-`starter.main:app` import remains as a compatibility adapter for the suspended
-Render configuration. When resuming the service, its start command can be set
-to `uvicorn census_income.api:app --host 0.0.0.0 --port $PORT`.
+The application entry point is `census_income.api:app`. When resuming the Render
+service, set its start command to
+`uvicorn census_income.api:app --host 0.0.0.0 --port $PORT`.
 
 - Reproducible dependency management with Python 3.13, `uv`, and `uv.lock`.
 - Five-fold stratified cross-validation with fold-local categorical encoding.
@@ -131,7 +136,7 @@ slice_output.txt               categorical slice metrics
 
 ## Responsible-use boundary
 
-This is a portfolio demonstration, not an independently validated income or
+This is a demonstration model, not an independently validated income or
 eligibility system. The historical dataset includes demographic and
 socioeconomic attributes and may encode measurement choices and social bias.
 Do not use the model for employment, credit, insurance, housing, education,
@@ -139,11 +144,7 @@ benefits, or other high-impact decisions. There is no external or temporal
 validation set, probability calibration, production monitoring, or fairness
 certification.
 
-## Data and provenance
+## Data
 
 The project uses the Adult/Census Income dataset from the
 [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/2/adult).
-This repository began from Udacity's `nd0821-c3-starter-code` scaffold. Tianrui
-Zhang completed and extended the training and evaluation workflow, inference
-API, tests, CI configuration, deployment, request example, and model
-documentation. Udacity-provided materials remain subject to [LICENSE.txt](LICENSE.txt).

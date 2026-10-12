@@ -23,12 +23,6 @@ def test_model_loading_independent_of_working_directory(tmp_path, monkeypatch):
         assert client.get("/").status_code == 200
 
 
-def test_legacy_deployment_entry_point():
-    from starter.main import app as legacy_app
-
-    assert legacy_app is app
-
-
 def test_predict_less_50K(client):
     response = client.post(
         "/predict",
